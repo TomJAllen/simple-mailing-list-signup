@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const request = require("request");
 const https = require("https");
 const mailchimp = require("@mailchimp/mailchimp_marketing");
+require('dotenv').config()
+
 
 const app = express();
 
@@ -11,7 +13,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 app.listen(process.env.PORT || 3000, function () {
-  console.log("App listening on port 3000")
+  console.log("App listening on port 3000");
+  console.log(`Server is ${process.env.SERVER}.`);
+  console.log(`API is ${process.env.MC_API}.`);
+  console.log(`List is ${process.env.MC_LIST_ID}.`);
 })
 
 app.get('/', function (req, res) {
@@ -21,9 +26,9 @@ app.get('/', function (req, res) {
 //Setting up MailChimp
 mailchimp.setConfig({
   //*****************************ENTER YOUR API KEY HERE******************************
-  apiKey: MC_API,
+  apiKey: `${process.env.MC_API}`,
   //*****************************ENTER YOUR API KEY PREFIX HERE i.e.THE SERVER******************************
-  server: SERVER
+  server: `${process.env.SERVER}`
 });
 //As soon as the sign in button is pressed execute this
 app.post("/", function (req, res) {
@@ -32,7 +37,7 @@ app.post("/", function (req, res) {
   const lastName = req.body.lName;
   const email = req.body.email;
   //*****************************ENTER YOU LIST ID HERE******************************
-  const listId = MC_LIST_ID;
+  const listId = `${process.env.MC_LIST_ID}`;
   //Creating an object with the users data
   const subscribingUser = {
     firstName: firstName,
